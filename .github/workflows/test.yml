@@ -1,0 +1,165 @@
+name: NUVIAH CI
+
+"on":
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nuviah-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  integrity:
+    name: Repository integrity
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Prepare launcher
+        shell: bash
+        run: chmod 755 nuviah.sh
+
+      - name: Verify required repository files
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+
+          required_files=(
+            nuviah.sh
+            nuviah.sh.sha256
+            README.md
+            LICENSE
+            NOTICE
+            CHANGELOG.md
+            SECURITY.md
+            CITATION.cff
+            CONTRIBUTING.md
+            COMMERCIAL-LICENSING.md
+            .gitignore
+            .github/CODEOWNERS
+            .github/ISSUE_TEMPLATE/bug_report.yml
+            .github/workflows/test.yml
+          )
+
+          for file in "${required_files[@]}"; do
+            if [[ ! -f "$file" ]]; then
+              printf 'Missing required file: %s\n' "$file" >&2
+              exit 1
+            fi
+          done
+
+      - name: Verify official SHA-256 checksum
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          sha256sum -c nuviah.sh.sha256
+
+      - name: Validate Bash syntax
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          bash -n nuviah.sh
+
+      - name: Verify release and ownership metadata
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+
+          test "$(./nuviah.sh --version)" = "NUVIAH 1.0.5"
+          grep -Fqx '# Copyright © 2026 Nebra0x' nuviah.sh
+          grep -Fqx '# Licensed under the PolyForm Strict License 1.0.0.' nuviah.sh
+          grep -Fq 'Copyright © 2026 Nebra0x' NOTICE
+          grep -Fq 'Nebra0x' CITATION.cff
+
+      - name: Reject tracked operational reports
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+
+          if git ls-files | grep -E '(^|/)(nuviah-reports|reports|output|results|test-output)/|(^|/)nuviah_.*\.(txt|csv|json|pdf)$'; then
+            printf 'Operational report files must not be committed.\n' >&2
+            exit 1
+          fi
+
+  self-test:
+    name: Offline self-test / Python ${{ matrix.python-version }}
+    needs:
+      - integrity
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version:
+          - "3.9"
+          - "3.13"
+
+    env:
+      LANG: C.UTF-8
+      LC_ALL: C.UTF-8
+      PYTHONUTF8: "1"
+      PIP_DISABLE_PIP_VERSION_CHECK: "1"
+      PIP_NO_INPUT: "1"
+      NO_COLOR: "1"
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Prepare launcher
+        shell: bash
+        run: chmod 755 nuviah.sh
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install the tested PDF dependency
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          python -m pip install --only-binary=:all: "reportlab==4.4.10"
+
+      - name: Display test environment
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          bash --version | head -n 1
+          curl --version | head -n 1
+          python --version
+          python -c 'import reportlab; print("ReportLab", reportlab.Version)'
+
+      - name: Check dependencies
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          ./nuviah.sh --check-deps
+
+      - name: Run the offline NUVIAH test suite
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          ./nuviah.sh --self-test | tee self-test.log
+
+      - name: Verify successful completion
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          grep -Fx 'All offline tests passed.' self-test.log
