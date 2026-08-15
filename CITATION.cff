@@ -1,0 +1,36 @@
+cff-version: "1.2.0"
+message: "If you use NUVIAH, please cite the software and credit Nebra0x using the metadata in this file."
+title: "NUVIAH"
+type: software
+version: "1.0.5"
+date-released: "2026-08-13"
+
+authors:
+  - name: "Nebra0x"
+    website: "https://github.com/Nebra0x"
+
+contact:
+  - name: "Nebra0x"
+    website: "https://github.com/Nebra0x"
+
+abstract: >-
+  NUVIAH is a Bash-based OSINT utility for conservative public-username
+  trace analysis across online sources. It supports exact username checks,
+  optional controlled similar-username discovery, public historical snapshot
+  checks, explainable result classification, and TXT, CSV, JSON, and PDF
+  reporting.
+
+keywords:
+  - "OSINT"
+  - "cybersecurity"
+  - "digital presence"
+  - "username reconnaissance"
+  - "digital footprint"
+  - "Bash"
+  - "Linux"
+  - "Kali Linux"
+  - "source-available software"
+
+repository-code: "https://github.com/Nebra0x/nuviah"
+url: "https://github.com/Nebra0x/nuviah"
+license-url: "https://polyformproject.org/licenses/strict/1.0.0/"
