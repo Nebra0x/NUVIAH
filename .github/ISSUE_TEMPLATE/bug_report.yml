@@ -1,0 +1,222 @@
+name: Bug report
+description: Report a reproducible defect in the official, unmodified NUVIAH release
+title: "[Bug]: "
+labels:
+  - bug
+assignees:
+  - Nebra0x
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for helping improve NUVIAH.
+
+        Use this form only for reproducible defects in the official, unmodified release.
+
+        **Security vulnerabilities must not be disclosed here.** Follow [`SECURITY.md`](../../SECURITY.md) and use GitHub Private Vulnerability Reporting.
+
+        Do not include access tokens, credentials, private usernames, personal data, operational reports, or confidential information. Public issue contents and uploaded attachments may be visible to everyone.
+
+        Expected third-party behavior—such as LinkedIn HTTP `999`, Reddit HTTP `403`, Internet Archive HTTP `429`, login walls, CAPTCHA pages, anti-bot responses, and rate limits—is not automatically a NUVIAH defect. Include the complete sanitized classification evidence so the behavior can be evaluated.
+
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Preflight checks
+      description: Confirm every item before submitting the report.
+      options:
+        - label: I am using the official, unmodified NUVIAH release.
+          required: true
+        - label: I have checked the README, known limitations, and existing issues.
+          required: true
+        - label: I ran `nuviah --self-test`, or I explain below why it could not be run.
+          required: true
+        - label: This report does not disclose a security vulnerability.
+          required: true
+        - label: I removed tokens, credentials, private usernames, IP addresses, personal data, and confidential report content.
+          required: true
+        - label: The reported activity used public data or an environment I was authorized to test.
+          required: true
+
+  - type: input
+    id: nuviah-version
+    attributes:
+      label: NUVIAH version
+      description: Paste the exact output of `nuviah --version`.
+      placeholder: "NUVIAH 1.0.5"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: installation-method
+    attributes:
+      label: Installation method
+      description: How are you running NUVIAH?
+      options:
+        - Installed user command (`~/.local/bin/nuviah`)
+        - Repository launcher (`./nuviah.sh`)
+        - GitHub release asset
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: affected-area
+    attributes:
+      label: Affected area
+      description: Select the area most closely related to the defect.
+      multiple: false
+      options:
+        - Exact username scan
+        - Result classification
+        - Similar-username discovery
+        - Historical trace lookup
+        - Platform validation
+        - Network or HTTP handling
+        - TXT report
+        - CSV report
+        - JSON report
+        - PDF report
+        - CLI, help, or legend
+        - Installation or dependencies
+        - Checksum or integrity verification
+        - Self-test
+        - Third-party platform behavior
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: affected-platform
+    attributes:
+      label: Affected platform
+      description: Enter the platform key or name, if the issue is platform-specific.
+      placeholder: "Example: linkedin, github, telegram, or not applicable"
+    validations:
+      required: false
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: |
+        Provide the relevant environment details. You may paste sanitized output from:
+        `uname -a`, `bash --version | head -n 1`, `curl --version | head -n 1`,
+        `python3 --version`, and `python3 -c 'import reportlab; print(reportlab.Version)'`.
+      placeholder: |
+        Linux distribution:
+        Kernel:
+        Bash:
+        curl:
+        Python:
+        ReportLab:
+        Virtual machine or physical host:
+      render: text
+    validations:
+      required: true
+
+  - type: textarea
+    id: command
+    attributes:
+      label: Command executed
+      description: Paste the exact sanitized command that triggered the issue.
+      placeholder: "nuviah scan octocat --platforms github --all-formats --output-dir reports"
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction steps
+      description: Provide the smallest complete sequence that reproduces the defect.
+      placeholder: |
+        1. Run ...
+        2. Observe ...
+        3. Repeat ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: Describe the result you expected and why.
+    validations:
+      required: true
+
+  - type: textarea
+    id: observed
+    attributes:
+      label: Observed behavior
+      description: Describe what actually happened.
+    validations:
+      required: true
+
+  - type: textarea
+    id: classification-evidence
+    attributes:
+      label: Classification evidence
+      description: |
+        When the issue concerns a scan result, copy the sanitized technical fields from the TXT or PDF report.
+        Enter `Not applicable` for issues unrelated to scan classification.
+      placeholder: |
+        Platform:
+        Phase:
+        Candidate:
+        Status:
+        HTTP:
+        Effective URL:
+        Technical confidence:
+        Username similarity:
+        Reason:
+        Observed at:
+      render: text
+    validations:
+      required: true
+
+  - type: textarea
+    id: self-test
+    attributes:
+      label: Self-test output
+      description: |
+        Paste the sanitized output of `nuviah --self-test`.
+        If it could not be run, explain the exact reason.
+      placeholder: |
+        NUVIAH self-test offline
+        ...
+        All offline tests passed.
+      render: text
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-output
+    attributes:
+      label: Additional sanitized output
+      description: |
+        Add minimal logs, screenshots, or report excerpts only when necessary.
+        Do not upload full operational reports or files containing personal data.
+      placeholder: "Optional additional context"
+    validations:
+      required: false
+
+  - type: textarea
+    id: regression
+    attributes:
+      label: Regression information
+      description: Did this work in an earlier official release or environment?
+      placeholder: "Example: Not known, or worked in NUVIAH 1.0.5 on Kali Linux"
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: final-confirmation
+    attributes:
+      label: Final confirmation
+      options:
+        - label: I understand that submission does not authorize modification, redistribution, derivative works, or commercial use of NUVIAH.
+          required: true
+        - label: I confirm that the information above is accurate and sanitized to the best of my knowledge.
+          required: true
