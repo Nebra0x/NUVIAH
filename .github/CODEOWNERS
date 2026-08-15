@@ -1,0 +1,16 @@
+# NUVIAH code ownership
+#
+# Nebra0x is the creator, copyright holder, maintainer, and code owner
+# of the official NUVIAH repository.
+
+* @Nebra0x
+
+# Security-sensitive and release-critical files
+/nuviah.sh @Nebra0x
+/nuviah.sh.sha256 @Nebra0x
+/LICENSE @Nebra0x
+/NOTICE @Nebra0x
+/SECURITY.md @Nebra0x
+/COMMERCIAL-LICENSING.md @Nebra0x
+/.github/CODEOWNERS @Nebra0x
+/.github/workflows/ @Nebra0x
