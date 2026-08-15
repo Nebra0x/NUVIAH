@@ -1,0 +1,95 @@
+# =============================================================================
+# NUVIAH — Git ignore rules
+# =============================================================================
+
+# Generated reports and scan output
+nuviah-reports/
+reports/
+output/
+results/
+test-output/
+nuviah-test*/
+nuviah_*.txt
+nuviah_*.csv
+nuviah_*.json
+nuviah_*.pdf
+
+# Temporary and partial files
+tmp/
+temp/
+.nuviah-tmp/
+*.tmp
+*.temp
+*.part
+*.headers
+*.body
+*.response
+*.log
+
+# Local secrets and environment files
+.env
+.env.*
+!.env.example
+*.token
+*.secret
+*.pem
+*.key
+credentials.json
+credentials.yml
+credentials.yaml
+secrets.json
+secrets.yml
+secrets.yaml
+
+# Local backups and development copies
+nuviah-old.sh
+nuviah-old.sh.sha256
+nuviah-v*.sh
+nuviah-v*.sh.sha256
+*.bak
+*.backup
+*.orig
+*~
+
+# Local packaging and publication notes
+NUVIAH_*_PACKAGE/
+NUVIAH_*_PreRelease/
+README_PUBLICATION_NOTES.txt
+NEXT_STEP.txt
+PLACEMENT.txt
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+
+# Python cache and virtual environments
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Editor and IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Operating-system metadata
+.DS_Store
+Thumbs.db
+Desktop.ini
+.Trash-*
+
+# Explicitly keep official repository files and approved demo assets
+!nuviah.sh
+!nuviah.sh.sha256
+!README.md
+!LICENSE
+!NOTICE
+!docs/
+!docs/assets/
+!docs/assets/*.svg
+!docs/assets/*.png
+!examples/
+!examples/NUVIAH_Sample_Dossier.pdf
